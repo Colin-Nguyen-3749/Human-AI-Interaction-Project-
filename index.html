@@ -4,5 +4,46 @@
         <meta charset=""UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title> ReRoot: News You Can Use</title>
+        <link rel="stylesheet" href="style.css" />
     </head>
+
+    <body>
+        <div class="page-wrapper">
+            <header class="site-header">
+                <h1 class="site-title"> ReRoot</h1>
+            </header>
+
+        <!---This is where the news chat box will be-->
+        <main>
+            <section class="chatbox">
+                <div id="chatWindow" class="chat-window">
+                    
+                </div>
+
+                <form id="chatForm" class="chat-form">
+                    <label for="userInput" class="visually-hidden">Message</label>
+                    <input
+                        in="userInput"
+                        name="userInput"
+                        type="text"
+                        placeholder="What's going on in the world today?"
+                        autocomplete="off"
+                        required
+                    />
+
+                    <button type="submit" id="sendBtn">
+                        <span class="material-icons">send</span>
+                        <span class="visually=hidden">Send</span>
+                    </button>
+                    </form>
+            </section>
+        </main>
+
+
+
+
+
+        
+        </div>
+    </body>
 
