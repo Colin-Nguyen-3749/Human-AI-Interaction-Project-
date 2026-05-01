@@ -31,3 +31,17 @@ body {
     margin-bottom: 10px; 
 }
 
+.chatbox {
+    margin: 40px 0;
+}
+
+.chat-window {
+    height: 360 px;
+    border: 1px solid #000;
+    padding: 20px;
+    font-size: 18px;
+    line-height: 1.5;
+    overflow-y: auto;
+    background: #fafafa;
+    white-space: pre-line;
+}
