@@ -1,0 +1,33 @@
+/* basic reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Styling for the body and the fonts*/
+body {
+    font-family: "Montserrat", Arial, Helvetica, sans-serif;
+    color: black;
+    display: flex;
+    justify-content: center;
+} 
+
+.page-wrapper {
+    width: 90%;
+    max-width: 900px;
+}
+
+/* Styling for the header */
+.site-header {
+    text-align: center;
+    padding-top: 25px;
+}
+
+.site-title {
+    padding-top: 10px;
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 10px; 
+}
+
