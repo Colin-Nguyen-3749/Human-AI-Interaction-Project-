@@ -1,55 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset=""UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title> ReRoot: News You Can Use</title>
-        <link rel="stylesheet" href="style.css" />
-    </head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat Assistant</title>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-    <body>
-        <div class="page-wrapper">
-            <header class="site-header">
-                <h1 class="site-title"> ReRoot</h1>
-            </header>
+  <body>
+    <div class="page-wrapper">
+      <!------- Header / Branding ------->
+      <header class="site-header">
+        <img src="img/loreal-logo.png" alt="Loreal Logo" class="site-logo" />
+        <h1 class="site-title">Smart Product Advisor</h1>
+      </header>
 
-        <!---This is where the news chat box will be-->
-        <main>
-            <section class="chatbox">
-                <div id="chatWindow" class="chat-window">
-                    
-                </div>
+      <!------- Chat Area ------->
+      <main>
+        <section class="chatbox">
+          <div id="chatWindow" class="chat-window">
+            <!-- messages will be appended here via JS -->
+          </div>
 
-                <form id="chatForm" class="chat-form">
-                    <label for="userInput" class="visually-hidden">Message</label>
-                    <input
-                        in="userInput"
-                        name="userInput"
-                        type="text"
-                        placeholder="What's going on in the world today?"
-                        autocomplete="off"
-                        required
-                    />
+          <form id="chatForm" class="chat-form">
+            <label for="userInput" class="visually-hidden">Message</label>
+            <input
+              id="userInput"
+              name="userInput"
+              type="text"
+              placeholder="Ask me about products or routines…"
+              autocomplete="off"
+              required
+            />
+            <button type="submit" id="sendBtn">
+              <span class="material-icons">send</span>
+              <span class="visually-hidden">Send</span>
+            </button>
+          </form>
+        </section>
+      </main>
 
-                    <button type="submit" id="sendBtn">
-                        <span class="material-icons">send</span>
-                        <span class="visually=hidden">Send</span>
-                    </button>
-                    </form>
-            </section>
-        </main>
+      <!------- Footer Links ------->
+      <footer class="site-footer">
+        <p>&copy; 2025 Company Name. All rights reserved.</p>
+        <nav>
+          <!-- These URLs are placeholders -->
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </nav>
+      </footer>
+    </div>
 
-
-        <!--Footer links-->
-        <footer class="site-footer">
-            <p>Work in Progress</p>
-            <nav>
-                <a href="#">Contact Us</a>
-            </nav>
-        </footer>
-
-
-
-        </div>
-    </body>
-
+    <!-- secrets.js can be removed when using Cloudflare Workers for API requests -->
+    <script src="secrets.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
