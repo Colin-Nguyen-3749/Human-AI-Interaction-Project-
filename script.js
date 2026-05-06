@@ -81,7 +81,7 @@ chatForm.addEventListener("submit", async (e) => {
   });
 
   try {
-    // Call OpenAI API through Cloudflare Worker
+    // Call Mistral AI API through Cloudflare Worker
     const aiResponse = await callMistralAI();
 
     // Hide loading indicator
@@ -128,7 +128,6 @@ async function callMistralAI() {
 
   // Prepare request body
   const requestBody = {
-    model: "gpt-4o",
     messages: conversationHistory,
     max_completion_tokens: 300,
   };
