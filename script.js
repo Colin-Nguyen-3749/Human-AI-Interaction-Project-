@@ -194,7 +194,7 @@ const chatWindow = document.getElementById("chatWindow");
 const sendBtn = document.getElementById("sendBtn");
 
 // Set initial message
-chatWindow.textContent = "👋 Hello! How can I help you today?";
+chatWindow.textContent = "I wonder what's going on in the world right now...";
 
 // Store conversation history for context
 let conversationHistory = [
@@ -427,7 +427,7 @@ function hideLoadingIndicator() {
 // Display welcome message when page loads
 window.addEventListener("load", () => {
   displayMessage(
-    "Hi! I'm here to help you know what's going on in the world right now. Curious? Ask away!",
+    "I wonder what's going on in the world right now...",
     "ai"
   );
   userInput.focus(); // Focus on input field
