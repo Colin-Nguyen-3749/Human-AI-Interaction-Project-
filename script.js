@@ -285,7 +285,7 @@ chatForm.addEventListener("submit", async (e) => {
       content: aiResponse,
     });
   } catch (error) {
-    console.error("Error calling OpenAI API:", error);
+    console.error("Error calling Mistral AI API:", error);
 
     // Hide loading indicator
     hideLoadingIndicator();
@@ -427,7 +427,7 @@ function hideLoadingIndicator() {
 // Display welcome message when page loads
 window.addEventListener("load", () => {
   displayMessage(
-    "Hi! I'm your L'Oréal product advisor. Ask me about skincare routines, makeup products, or any beauty questions you have!",
+    "Hi! I'm here to help you know what's going on in the world right now. Curious? Ask away!",
     "ai"
   );
   userInput.focus(); // Focus on input field
