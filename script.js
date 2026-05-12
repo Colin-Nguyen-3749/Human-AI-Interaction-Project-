@@ -149,7 +149,9 @@ async function callMistralAI() {
   // Parse response
   const data = await response.json();
 
-  // Extract AI message from response
+
+  console.log(data);
+  // Extract AI message from response  
   return data.choices[0].message.content;
 }
 
