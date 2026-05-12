@@ -302,13 +302,73 @@ chatForm.addEventListener("submit", async (e) => {
 function displayMessage(message, sender) {
   const messageElement = document.createElement("div");
   messageElement.classList.add("msg", sender);
-  messageElement.textContent = message;
+
+  if (sender === "ai") {
+    messageElement.innerHTML = renderMarkdown(message);
+  } else {
+    messageElement.textContent = message;
+  }
 
   // Add message to chat window
   chatWindow.appendChild(messageElement);
 
   // Scroll to bottom of chat window
   chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+// Render a limited, safe subset of Markdown for assistant messages.
+function renderMarkdown(text) {
+  const escapedText = escapeHtml(text);
+  const lines = escapedText.split(/\r?\n/);
+  const html = [];
+  let listItems = [];
+
+  const flushList = () => {
+    if (listItems.length > 0) {
+      html.push(`<ul>${listItems.join("")}</ul>`);
+      listItems = [];
+    }
+  };
+
+  for (const line of lines) {
+    const listMatch = line.match(/^\s*[-*+]\s+(.+)$/);
+
+    if (listMatch) {
+      listItems.push(`<li>${renderInlineMarkdown(listMatch[1])}</li>`);
+      continue;
+    }
+
+    flushList();
+
+    if (line.trim() === "") {
+      html.push("<br />");
+    } else {
+      html.push(`<p>${renderInlineMarkdown(line)}</p>`);
+    }
+  }
+
+  flushList();
+
+  return html.join("");
+}
+
+function renderInlineMarkdown(text) {
+  return text
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer noopener">$1</a>')
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/__([^_]+)__/g, "<strong>$1</strong>")
+    .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+    .replace(/_([^_]+)_/g, "<em>$1</em>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>");
+}
+
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 // Function to call OpenAI API

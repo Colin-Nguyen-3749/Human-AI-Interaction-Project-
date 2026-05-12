@@ -44,7 +44,7 @@ body {
   line-height: 1.5;
   overflow-y: auto;
   background: #fafafa;
-  white-space: pre-line;
+  white-space: normal;
 }
 
 /* messages */
@@ -72,6 +72,35 @@ body {
   margin-left: 0;
   margin-right: auto;
   border-bottom-left-radius: 6px;
+}
+
+.msg.ai p {
+  margin-bottom: 0.6rem;
+}
+
+.msg.ai p:last-child {
+  margin-bottom: 0;
+}
+
+.msg.ai ul {
+  margin: 0.5rem 0 0.5rem 1.25rem;
+  padding-left: 1rem;
+}
+
+.msg.ai li + li {
+  margin-top: 0.35rem;
+}
+
+.msg.ai a {
+  color: #000;
+  text-decoration: underline;
+}
+
+.msg.ai code {
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.08);
+  font-size: 0.95em;
 }
 
 /* Loading indicator styles */
