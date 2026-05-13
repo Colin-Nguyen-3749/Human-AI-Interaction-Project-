@@ -427,7 +427,7 @@ function hideLoadingIndicator() {
 // Display welcome message when page loads
 window.addEventListener("load", () => {
   displayMessage(
-    "I wonder what's going on in the world right now...",
+    "Ask me anything about current events!",
     "ai"
   );
   userInput.focus(); // Focus on input field
