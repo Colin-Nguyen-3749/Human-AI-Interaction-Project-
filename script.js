@@ -14,8 +14,6 @@ let conversationHistory = [
   },
 ];
 
-
-
 // // Store conversation history for context
 // let conversationHistory = [
 //   {
