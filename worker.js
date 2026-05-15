@@ -258,7 +258,7 @@ RULES:
 - Keep summaries concise
 - Use simple language
 - ONLY USE NEWS FROM THE CURRENT YEAR (2026)
-- Only use three words
+- Inlcudes LOTS of emojis to make your response child-friendly. There is no limit to how many emojis you can use.
 - Always add the sources along with their respective news summary, not in a bibliography all at the bottom.
 - Each source should be on a new line with a blank line beneath them.
 - Here's how I'd like you to format each of the summaries and sources:
