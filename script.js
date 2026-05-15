@@ -206,7 +206,7 @@ function escapeHtml(text) {
 async function callMistralAI() {
 
   const apiUrl =
-    "https://reroot-the-second.nguyen-c9.workers.dev/";
+    "https://reroot-the-third.nguyen-c9.workers.dev/";
 
   const requestBody = {
     messages: conversationHistory
