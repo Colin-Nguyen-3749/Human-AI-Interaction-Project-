@@ -3,7 +3,7 @@ import feedparser
 from newspaper import Article
 from vectordb import save_to_vector_db  # Connects to your ChromaDB file
 
-# NBC News public RSS endpoints (You can add more if you've broken them down into topics)
+#nbc RSS feed urls
 NBC_FEEDS = {
     "main": "https://feeds.nbcnews.com/nbcnews/public/news",
     "politics": "https://feeds.nbcnews.com/feeds/nbcpolitics",
@@ -11,7 +11,7 @@ NBC_FEEDS = {
 }
 
 def fetch_nbc_article_urls(feed_url):
-    """Parses the NBC RSS feed to retrieve a clean list of article links."""
+    """Parses to retrieve a clean list of article links."""
     print(f"Fetching RSS feed data from: {feed_url}")
     feed = feedparser.parse(feed_url)
     
@@ -24,7 +24,7 @@ def fetch_nbc_article_urls(feed_url):
     return list(set(links))  # De-duplicate links just in case
 
 def process_and_store_article(url):
-    """Downloads article body from NBC and updates your local Vector DB."""
+    """Downloads article body from NBC, update vector database"""
     try:
         article = Article(url)
         article.download()
@@ -41,7 +41,7 @@ def process_and_store_article(url):
             "url": url
         }
         
-        # Save to your local ChromaDB database file structure
+        # Save to local ChromaDB database
         save_to_vector_db(article_data)
         return True
         
