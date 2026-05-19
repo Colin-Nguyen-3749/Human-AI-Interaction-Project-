@@ -7,7 +7,7 @@ from vectordb import query_knowledge_base  # Importing your local ChromaDB query
 app = Flask(__name__)
 CORS(app)  # Allows your frontend script.js to communicate with this backend
 
-CLOUDFLARE_WORKER_URL = "https://reroot-the-second.nguyen-c9.workers.dev/"
+CLOUDFLARE_WORKER_URL = "https://reroot-the-third.nguyen-c9.workers.dev/"
 
 @app.route("/api/chat", methods=["POST"])
 def chat_bridge():
