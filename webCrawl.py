@@ -3,11 +3,28 @@ import feedparser
 from newspaper import Article
 from vectordb import save_to_vector_db  # Connects to your ChromaDB file
 
+from database import (
+    create_art_tables,
+    save_article,
+    article_exists
+)
+
 #nbc RSS feed urls
-NBC_FEEDS = {
-    "main": "https://feeds.nbcnews.com/nbcnews/public/news",
-    "politics": "https://feeds.nbcnews.com/feeds/nbcpolitics",
-    "business": "https://feeds.nbcnews.com/nbcnews/public/business"
+NEWS_FEEDS = {
+    "NBC News": {
+        "main": "https://feeds.nbcnews.com/nbcnews/public/news",
+        #"politics": "https://feeds.nbcnews.com/feeds/nbcpolitics",
+        #"business": "https://feeds.nbcnews.com/nbcnews/public/business"
+    },
+
+    "Reuters": {
+        "main": "https://feeds.reuters.com/reuters/topNews"
+    },
+
+    "BBC": {
+        "main": "http://feeds.bbci.co.uk/news/rss.xml"
+    }
+    
 }
 
 def fetch_nbc_article_urls(feed_url):
@@ -23,8 +40,13 @@ def fetch_nbc_article_urls(feed_url):
             
     return list(set(links))  # De-duplicate links just in case
 
-def process_and_store_article(url):
+def process_and_store_article(url, source_name):
     """Downloads article body from NBC, update vector database"""
+
+    if article_exists(url):
+        print("Article already exists.")
+        return False
+    
     try:
         article = Article(url)
         article.download()
@@ -40,7 +62,16 @@ def process_and_store_article(url):
             "publish_date": article.publish_date if article.publish_date else "Unknown",
             "url": url
         }
-        
+        save_article({
+            "title": article.title,
+            "url": url,
+            "publish_date": str(article.publish_date),
+            "source": source_name,
+            "content": article.text,
+            "summary": article.text[:300],
+            "category": "news"
+        })
+
         # Save to local ChromaDB database
         save_to_vector_db(article_data)
         return True
@@ -52,18 +83,22 @@ def process_and_store_article(url):
 def run_nbc_crawler():
     print("=== STARTING NBC NEWS CRAWLER ===")
     
-    # Grab the top stories feed
-    target_feed = NBC_FEEDS["main"]
-    article_links = fetch_nbc_article_urls(target_feed)
-    
-    print(f"Found {len(article_links)} recent articles in feed.")
-    
+    create_art_tables()
+
     success_count = 0
+
+    # Grab the top stories feed
+    for source_name, feeds in NEWS_FEEDS.items():
+        target_feed = feeds["main"]
+        print(f"\n=== FETCHING FROM {source_name} ===")
+        article_links = fetch_nbc_article_urls(target_feed)
+        print(f"Found {len(article_links)} recent articles in feed.")
+    
     # Limit processing for testing (e.g., process the top 10 fresh articles)
-    for link in article_links[:10]:
-        print(f"Processing: {link}")
-        if process_and_store_article(link):
-            success_count += 1
+        for link in article_links[:10]:
+            print(f"Processing: {link}")
+            if process_and_store_article(link, source_name):
+                success_count += 1
             
     print(f"=== CRAWLER COMPLETE: Successfully saved {success_count} articles to ChromaDB ===")
 

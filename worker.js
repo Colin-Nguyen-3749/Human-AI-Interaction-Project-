@@ -150,10 +150,10 @@ async function performWebSearch(query, OPENNEWS_API_KEY) {
     // const url = new URL('https://newsdata.io/api/1/latest');
     const url = new URL('https://newsapi.org/v2/top-headlines');
 
-    url.searchParams.set('apikey', OPENNEWS_API_KEY);
+    url.searchParams.set('apiKey', OPENNEWS_API_KEY);
     url.searchParams.set('q', query);
     url.searchParams.set('language', 'en');
-    url.searchParams.set('from_date', getYesterdayDate());
+    url.searchParams.set('from', getYesterdayDate());
 
     const response = await fetch(url.toString(), {
       method: 'GET',
@@ -178,7 +178,7 @@ async function performWebSearch(query, OPENNEWS_API_KEY) {
     console.error('Search error:', error);
 
     return {
-      results: []
+      articles: []
     };
   }
 }
@@ -187,16 +187,16 @@ async function performWebSearch(query, OPENNEWS_API_KEY) {
 function addSearchResultsToMessages(messages, searchResults) {
 
   if (
-    !searchResults.results ||
-    searchResults.results.length === 0
+    !searchResults.articles ||
+    searchResults.articles.length === 0
   ) {
     return messages;
   }
-  const recentResults = searchResults.results.filter(article => {
+  const recentResults = searchResults.articles.filter(article => {
 
-  if (!article.pubDate) return false;
+  if (!article.publishedAt) return false;
 
-  const publishedDate = new Date(article.pubDate);
+  const publishedDate = new Date(article.publishedAt);
   const now = new Date();
 
   const diffHours =
@@ -205,12 +205,14 @@ function addSearchResultsToMessages(messages, searchResults) {
   return diffHours <= 48;
 });
 
-  const searchSummary = recentResultsResults.results.slice(0, 5)
-    .map(result => `
-      Title: ${result.title}
-      Published: ${result.pubDate}
-      Description: ${result.description}
-      URL: ${result.link}
+  const searchSummary = recentResults
+    .slice(0, 5)
+    .map(article => `
+      Title: ${article.title}
+      Published: ${article.publishedAt}
+      Description: ${article.description}
+      Source: ${article.source?.name}
+      URL: ${article.url}
     `)
     .join('\n');
 
