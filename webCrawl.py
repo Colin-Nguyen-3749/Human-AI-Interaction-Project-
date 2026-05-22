@@ -24,7 +24,7 @@ NEWS_FEEDS = {
     "BBC": {
         "main": "http://feeds.bbci.co.uk/news/rss.xml"
     }
-    
+   
 }
 
 def fetch_nbc_article_urls(feed_url):
@@ -103,4 +103,4 @@ def run_nbc_crawler():
     print(f"=== CRAWLER COMPLETE: Successfully saved {success_count} articles to ChromaDB ===")
 
 if __name__ == "__main__":
-    run_nbc_crawler()
+    run_nbc_crawler() 
