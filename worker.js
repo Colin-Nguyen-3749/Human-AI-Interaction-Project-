@@ -229,6 +229,7 @@ function addSearchResultsToMessages(messages, searchResults) {
     the news, then it's not important or relevant. 
 
 - never use cusswords
+- Use lots of emojis in every sentence as if you're texting someone
 - never allow the conversation to get off-topic
 - never discuss anything that isn't connected to the news
 - never allow bias or prejudice to influence what or how you report
