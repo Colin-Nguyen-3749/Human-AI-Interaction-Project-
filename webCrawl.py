@@ -11,10 +11,8 @@ from database import (
 
 #nbc RSS feed urls
 NEWS_FEEDS = {
-    "NBC News": {
+    "NBC Main News": {
         "main": "https://feeds.nbcnews.com/nbcnews/public/news",
-        #"politics": "https://feeds.nbcnews.com/feeds/nbcpolitics",
-        #"business": "https://feeds.nbcnews.com/nbcnews/public/business"
     },
 
     "Reuters": {
@@ -23,8 +21,27 @@ NEWS_FEEDS = {
 
     "BBC": {
         "main": "http://feeds.bbci.co.uk/news/rss.xml"
-    }
-   
+    },
+    #forbes not working?
+    #"Forbes" : {
+       # "main": "https://www.forbes.com/business/feed/"
+   # },
+
+    "NBC Politics" :{
+        "main" : "https://feeds.nbcnews.com/feeds/nbcpolitics"
+    },
+
+    "NBC Business" : {
+        "main" : "https://feeds.nbcnews.com/nbcnews/public/business"
+    },
+
+   "Conversation Feed" : {
+       "main" : "theconversation.com/us/articles"
+   },
+
+   "Alternet Feed" : {
+       "main" : "alternet.org/feeds/feed.rss"
+   }
 }
 
 def fetch_nbc_article_urls(feed_url):
@@ -79,6 +96,11 @@ def process_and_store_article(url, source_name):
     except Exception as e:
         print(f"Error extracting content from {url}: {e}")
         return False
+
+#implement user input and then fetch articles/crawl articles based on it (RAG Chatbot automation)
+#use cos. vector for similarilty
+
+#issue: limit of article already exists??
 
 def run_nbc_crawler():
     print("=== STARTING NBC NEWS CRAWLER ===")
