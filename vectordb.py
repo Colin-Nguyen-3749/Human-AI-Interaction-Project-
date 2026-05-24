@@ -6,7 +6,7 @@ from chromadb.utils import embedding_functions
 chroma_client = chromadb.PersistentClient(path="./chroma_data")
 
 # 2. Define an embedding function using a lightweight local model
-# This model will run on your machine to convert text into semantic vectors
+# convert text into semantic vectors
 embedding_func = embedding_functions.SentenceTransformerEmbeddingFunction(
     model_name="all-MiniLM-L6-v2"
 )
@@ -47,7 +47,8 @@ def query_knowledge_base(user_query, limit=3):
             formatted_articles.append({
                 "text": results['documents'][0][i],
                 "title": results['metadatas'][0][i]['title'],
-                "url": results['metadatas'][0][i]['url']
+                "url": results['metadatas'][0][i]['url'],
+                "publish_date": results['metadatas'][0][i]['publish_date']
             })
             
     return formatted_articles

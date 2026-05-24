@@ -18,14 +18,14 @@ def chat_bridge():
         if not conversation_history:
             return jsonify({"message": "Invalid history"}), 400
 
-        # 1. Grab the very last message the user typed
+        #  Grab the very last message the user typed
         user_message_obj = conversation_history[-1]
         user_query = user_message_obj["content"]
 
-        # 2. Query your local ChromaDB for articles matching that query
+        # Query your local ChromaDB for articles matching that query
         relevant_articles = query_knowledge_base(user_query, limit=2)
 
-        # 3. Format the news findings into a clear text snippet
+        # Format the news findings into a clear text snippet
         context = ""
         if relevant_articles:
             context = "\n\n[RELEVANT NEWS CONTEXT FOUND IN KNOWLEDGE BASE]:\n"
@@ -34,12 +34,12 @@ def chat_bridge():
                 context += f"URL Link: {article['url']}\n"
                 context += f"Content: {article['text']}\n\n"
 
-        # 4. Append the news context directly behind the user's prompt 
+        # Append the news context directly behind the user's prompt 
         # so Mistral reads it as part of the instructions.
         if context:
             user_message_obj["content"] = f"{user_query}{context}\nInstructions: Use the provided news context above to answer the query. Ensure you include the exact URLs provided in markdown format."
 
-        # 5. Forward the updated conversation history to your Cloudflare Worker
+        # Forward the updated conversation history to your Cloudflare Worker
         worker_response = requests.post(
             CLOUDFLARE_WORKER_URL, 
             json={"messages": conversation_history},

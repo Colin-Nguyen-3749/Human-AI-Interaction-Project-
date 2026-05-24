@@ -10,7 +10,12 @@ NBC_FEEDS = {
     "business": "https://feeds.nbcnews.com/nbcnews/public/business"
 }
 
-def fetch_nbc_article_urls(feed_url):
+#reuters rss feed url
+REUTERS_FEEDS = {
+    "main": "https://news.google.com/rss/search?q=site%3Areuters.com&hl=en-US&gl=US&ceid=US%3Aen"
+}
+
+def fetch_article_urls(feed_url):
     """Parses to retrieve a clean list of article links."""
     print(f"Fetching RSS feed data from: {feed_url}")
     feed = feedparser.parse(feed_url)
@@ -24,7 +29,7 @@ def fetch_nbc_article_urls(feed_url):
     return list(set(links))  # De-duplicate links just in case
 
 def process_and_store_article(url):
-    """Downloads article body from NBC, update vector database"""
+    """Downloads article bodies and update vector database"""
     try:
         article = Article(url)
         article.download()
@@ -49,23 +54,42 @@ def process_and_store_article(url):
         print(f"Error extracting content from {url}: {e}")
         return False
 
-def run_nbc_crawler():
+def run_nbc():
     print("=== STARTING NBC NEWS CRAWLER ===")
     
     # Grab the top stories feed
     target_feed = NBC_FEEDS["main"]
-    article_links = fetch_nbc_article_urls(target_feed)
+    article_links = fetch_article_urls(target_feed)
     
     print(f"Found {len(article_links)} recent articles in feed.")
     
     success_count = 0
-    # Limit processing for testing (e.g., process the top 10 fresh articles)
-    for link in article_links[:10]:
+    for link in article_links:
         print(f"Processing: {link}")
         if process_and_store_article(link):
             success_count += 1
             
     print(f"=== CRAWLER COMPLETE: Successfully saved {success_count} articles to ChromaDB ===")
 
+def run_reuters():
+    print("=== STARTING REUTERS NEWS CRAWLER ===")
+    
+    # Grab the top stories feed
+    target_feed = REUTERS_FEEDS["main"]
+    article_links = fetch_article_urls(target_feed)
+    
+    print(f"Found {len(article_links)} recent articles in feed.")
+    
+    success_count = 0
+    # Limit processing for testing (e.g., process the top 10 fresh articles)
+    for link in article_links:
+        print(f"Processing: {link}")
+        if process_and_store_article(link):
+            success_count += 1
+            
+    print(f"=== CRAWLER COMPLETE: Successfully saved {success_count} articles to ChromaDB ===")
+
+
 if __name__ == "__main__":
-    run_nbc_crawler()
+    run_nbc()
+    run_reuters()
