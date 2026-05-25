@@ -65,7 +65,7 @@ def chat_bridge():
         # 4. Append the news context directly behind the user's prompt 
         # so Mistral reads it as part of the instructions.
         if context:
-            user_message_obj["content"] = f"{user_query}{context}\nInstructions: Use the provided news context above to answer the query. Ensure you include the exact URLs provided in markdown format."
+            user_message_obj["content"] = f"{user_query}{context}\nInstructions: Use the provided news context above to answer the query. Ensure you reproduce the URLs exactly as provided. Do not shorten or truncate URLS. Return links in markdown format"
 
         # 5. Forward the updated conversation history to your Cloudflare Worker
         worker_response = requests.post(
