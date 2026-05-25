@@ -11,12 +11,12 @@ CLOUDFLARE_WORKER_URL = "https://reroot-the-third.nguyen-c9.workers.dev/"
 
 @app.route("/api/articles", methods = ["GET"])
 
-def get_articles():
+def fetch_articles():
     conn = connect_db()
     cursor = conn.cursor()
 
     cursor.execute("""
-                SELECT title, url, source, publish_date
+                SELECT title, url, source, publish_date, content
                 FROM articles
                 ORDER BY scraped_at DESC
                 LIMIT 10
@@ -31,11 +31,12 @@ def get_articles():
         articles.append({
             "title": row[0],
             "url": row[1],
-            "sources": row[2],
-            "publish_date": row[3]
+            "source": row[2],
+            "publish_date": row[3],
+            "content": row[4]
         })
 
-    return jsonify(articles)
+    return articles
 
 @app.route("/api/chat", methods=["POST"])
 def chat_bridge():
@@ -51,7 +52,7 @@ def chat_bridge():
         user_query = user_message_obj["content"]
 
         # 2. Query your local articles matching that query
-        relevant_articles = get_articles()
+        relevant_articles = fetch_articles()
 
         # 3. Format the news findings into a clear text snippet
         context = ""
@@ -60,7 +61,7 @@ def chat_bridge():
             for idx, article in enumerate(relevant_articles):
                 context += f"Article Title: {article['title']}\n"
                 context += f"URL Link: {article['url']}\n"
-                context += f"Content: {article['text']}\n\n"
+                context += f"Content: {article['content']}\n\n"
 
         # 4. Append the news context directly behind the user's prompt 
         # so Mistral reads it as part of the instructions.
