@@ -3,11 +3,39 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
 from vectordb import query_knowledge_base  # Importing your local ChromaDB query function
+from database import connect_db
 
 app = Flask(__name__)
 CORS(app)  # Allows your frontend script.js to communicate with this backend
 
 CLOUDFLARE_WORKER_URL = "https://reroot-the-third.nguyen-c9.workers.dev/"
+
+@app.route("/api/articles", methods = ["GET"])
+def get_articles():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+                SELECT title, url, source, publish_date
+                FROM articles
+                ORDEER BY scraped_at DESC
+                LIMIT 10
+                   """)
+    
+    rows = cursor.fetchall()
+    conn.close()
+
+    articles = []
+
+    for row in rows:
+        articles.append({
+            "title": row[0],
+            "url": row[1],
+            "sources": row[2],
+            "publish_date": row[3]
+        })
+
+    return jsonify(articles)
 
 @app.route("/api/chat", methods=["POST"])
 def chat_bridge():
