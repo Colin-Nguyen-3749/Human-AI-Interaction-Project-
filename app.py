@@ -15,9 +15,7 @@ def fetch_articles():
     conn = connect_db()
     cursor = conn.cursor()
 
-    cursor.execute("""
-                SELECT title, url, source, publish_date
-                SELECT title, url, source, publish_date, content
+    cursor.execute("""SELECT title, url, source, publish_date, content
                 FROM articles
                 ORDER BY scraped_at DESC
                 LIMIT 10
@@ -41,11 +39,27 @@ def fetch_articles():
 
 @app.route("/api/chat", methods=["POST"])
 def chat_bridge():
-@ -61,27 +61,27 @@
+    try:
+        data = request.json
+        conversation_history = data.get("messages", [])
+
+        if not conversation_history:
+            return jsonify({"message": "Invalid history"}), 400
+
+        # 1. Grab the very last message the user typed
+        user_message_obj = conversation_history[-1]
+        user_query = user_message_obj["content"]
+
+        # 2. Query your local articles matching that query
+        relevant_articles = fetch_articles()
+
+        # 3. Format the news findings into a clear text snippet
+        context = ""
+        if relevant_articles:
+            context = "\n\n[RELEVANT NEWS CONTEXT FOUND IN KNOWLEDGE BASE]:\n"
             for idx, article in enumerate(relevant_articles):
                 context += f"Article Title: {article['title']}\n"
                 context += f"URL Link: {article['url']}\n"
-                content += f"Content: {article['text']}\n\n"
                 context += f"Content: {article['content']}\n\n"
 
         # 4. Append the news context directly behind the user's prompt 
