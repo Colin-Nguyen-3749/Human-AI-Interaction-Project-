@@ -18,7 +18,7 @@ def get_articles():
     cursor.execute("""
                 SELECT title, url, source, publish_date
                 FROM articles
-                ORDEER BY scraped_at DESC
+                ORDER BY scraped_at DESC
                 LIMIT 10
                    """)
     
@@ -51,7 +51,7 @@ def chat_bridge():
         user_query = user_message_obj["content"]
 
         # 2. Query your local articles matching that query
-        relevant_articles = get_articles(user_query, limit=2)
+        relevant_articles = get_articles()
 
         # 3. Format the news findings into a clear text snippet
         context = ""
