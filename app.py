@@ -2,7 +2,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
-from vectordb import query_knowledge_base  # Importing your local ChromaDB query function
 from database import connect_db
 
 app = Flask(__name__)
@@ -11,6 +10,7 @@ CORS(app)  # Allows your frontend script.js to communicate with this backend
 CLOUDFLARE_WORKER_URL = "https://reroot-the-third.nguyen-c9.workers.dev/"
 
 @app.route("/api/articles", methods = ["GET"])
+
 def get_articles():
     conn = connect_db()
     cursor = conn.cursor()
@@ -50,8 +50,8 @@ def chat_bridge():
         user_message_obj = conversation_history[-1]
         user_query = user_message_obj["content"]
 
-        # 2. Query your local ChromaDB for articles matching that query
-        relevant_articles = query_knowledge_base(user_query, limit=2)
+        # 2. Query your local articles matching that query
+        relevant_articles = get_articles(user_query, limit=2)
 
         # 3. Format the news findings into a clear text snippet
         context = ""
