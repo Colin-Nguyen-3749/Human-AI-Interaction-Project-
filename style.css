@@ -21,11 +21,11 @@ body {
 /* header */
 .site-header {
   text-align: center;
-  padding-top: 25px;
+  padding-top: 0px;
 }
 
 .site-title {
-  padding-top: 10px;
+  padding-top: 0px;
   font-size: 22px;
   font-weight: 500;
   margin-bottom: 10px;
@@ -33,7 +33,7 @@ body {
 
 /* chat window */
 .chatbox {
-  margin: 40px 0;
+  margin: 0px 0;
 }
 
 .chat-window {
@@ -223,9 +223,9 @@ body {
 }
 
 .site-logo {
-  max-width: 40%; /* reduced from 100% to make it smaller */
+  max-width: 60%; /* reduced from 100% to make it smaller */
   height: auto;
   display: block;
   margin: 0 auto;
-  padding-top: 5px;
+  padding-top: 0px;
 }
