@@ -9,7 +9,7 @@ from database import (
     article_exists
 )
 
-#nbc RSS feed urls
+#news to build database and their RSS feed urls
 NEWS_FEEDS = {
     "NBC Main News": {
         "main": "https://feeds.nbcnews.com/nbcnews/public/news",
@@ -43,7 +43,7 @@ NEWS_FEEDS = {
        "main" : "alternet.org/feeds/feed.rss"
    }
 }
-
+#switch from testing nbc to all the urls fed to it
 def fetch_nbc_article_urls(feed_url):
     """Parses to retrieve a clean list of article links."""
     print(f"Fetching RSS feed data from: {feed_url}")
