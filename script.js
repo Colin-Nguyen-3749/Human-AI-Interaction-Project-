@@ -254,6 +254,7 @@ function showLoadingIndicator() {
   chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
+
 // Function to hide loading indicator
 function hideLoadingIndicator() {
   if (loadingElement && loadingElement.parentNode) {
@@ -261,9 +262,13 @@ function hideLoadingIndicator() {
     loadingElement = null;
   }
 }
-
-// Display welcome message when page loads
+// function for the logo animation once site is completely loaded
 window.addEventListener("load", () => {
+  setTimeout(() => {
+    // FIX: Apply the 'loaded' class to the entire body element
+    document.body.classList.add("loaded");
+  }, 500); // adds delay to make it feel smoother
+
   displayMessage(
     "Ask me anything about current events!",
     "ai"
