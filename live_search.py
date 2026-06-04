@@ -40,7 +40,16 @@ def search_news_api(query, limit=5):
 
 
 def dynamic_ingest_from_user_query(user_query, limit=5):
-    urls = search_news_api(user_query, limit=limit)
+
+    deeper_words = ["deeper", "in-depth", "comprehensive", "more","explain","context","background","why"]
+    if any(word in user_query.lower() for word in deeper_words):
+        # logic to provide deeper context or background information
+        search_query = f"{user_query} analysis background context"
+
+    else:
+        search_query = user_query
+
+    urls = search_news_api(search_query, limit=limit)
 
     if not urls:
         return 0
