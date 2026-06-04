@@ -117,7 +117,7 @@ def run_nbc_crawler():
         print(f"Found {len(article_links)} recent articles in feed.")
     
     # Limit processing for testing (e.g., process the top 10 fresh articles)
-        for link in article_links[:10]:
+        for link in article_links:
             print(f"Processing: {link}")
             if process_and_store_article(link, source_name):
                 success_count += 1
