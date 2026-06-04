@@ -157,5 +157,26 @@ def run_news_crawler():
             
     print(f"=== CRAWLER COMPLETE: Successfully saved {success_count} articles to ChromaDB ===")
 
+def crawl_urls_from_search_results(article_urls, source_name="Live Search", source_meta=None):
+    if source_meta is None:
+        source_meta = {
+            "country": "Unknown",
+            "language": "en",
+            "source_type": "live search",
+            "perspective_label": "search result",
+        }
+
+    saved_count = 0
+
+    for url in article_urls:
+        print(f"Live crawling: {url}")
+
+        if process_and_store_article(url, source_name, source_meta):
+            saved_count += 1
+
+        time.sleep(1)
+
+    return saved_count
+
 if __name__ == "__main__":
     run_news_crawler()

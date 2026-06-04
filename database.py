@@ -82,9 +82,16 @@ def save_article(article_data):
         ))
 
         conn.commit()
+        return True
 
     except sqlite3.IntegrityError:
         print(f"Duplicate skipped: {article_data['url']}")
+        return False
+    
+    except Exception as e:
+        print(f"Databse error: {e}")
+        return False
+    
 
     finally:
         conn.close()

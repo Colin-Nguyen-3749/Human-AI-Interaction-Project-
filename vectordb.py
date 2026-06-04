@@ -41,27 +41,29 @@ def save_to_vector_db(article_data):
         ids=[doc_id]
     )
 
+    return True
+
 def query_knowledge_base(user_query, limit=3):
     """Performs a semantic search and returns the most relevant articles."""
     results = collection.query(
         query_texts=[user_query],
         n_results=limit
     )
-    
-    # Reformatting the output into a clean, readable dictionary structure
+
     formatted_articles = []
 
     if not results or not results.get("documents"):
         return formatted_articles
 
-    documents = results.get("documents", [0])
-    metadata = results.get("metadatas", [0])
+    documents = results["documents"][0]
+    metadatas = results["metadatas"][0]
 
     for i in range(len(documents)):
-        metadata = metadata[i]
+        metadata = metadatas[i]
 
         formatted_articles.append({
             "text": documents[i],
+            "content": documents[i],
             "title": metadata.get("title", "Untitled"),
             "url": metadata.get("url", ""),
             "publish_date": metadata.get("publish_date", "Unknown"),

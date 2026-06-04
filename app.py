@@ -7,6 +7,8 @@ from database import connect_db, create_art_tables
 from retrieval import search_articles
 from vectordb import query_knowledge_base
 
+from live_search import dynamic_ingest_from_user_query
+
 app = Flask(__name__)
 CORS(app)  # Allows your frontend script.js to communicate with this backend
 
@@ -67,7 +69,14 @@ def fetch_articles():
 def chat_bridge():
     try:
         data = request.json
-        conversation_history = data.get("messages", [])
+        if isinstance(data, list):
+            conversation_history = data
+
+        elif isinstance(data, dict):
+            conversation_history = data.get("messages", [])
+
+        else:
+            conversation_history = []
 
         if not conversation_history:
             return jsonify({"message": "Invalid history"}), 400
@@ -94,28 +103,44 @@ def chat_bridge():
 
         if is_recent_request:
             relevant_articles = get_recent_articles(limit=5)
+
         else:
+            # Step 1: search ChromaDB
             relevant_articles = query_knowledge_base(user_query, limit=5)
 
+            # Step 2: search SQLite fallback
             if not relevant_articles:
                 relevant_articles = search_articles(user_query, limit=5)
+
+            # Step 3: if not enough results, search live web and save new articles
+            if not relevant_articles or len(relevant_articles) < 2:
+                saved_count = dynamic_ingest_from_user_query(user_query, limit=5)
+                print(f"Dynamically saved {saved_count} new articles.")
+
+                # Step 4: search again after saving
+                relevant_articles = query_knowledge_base(user_query, limit=5)
+
+                if not relevant_articles:
+                    relevant_articles = search_articles(user_query, limit=5)
 
         # 3. Format the news findings into a clear text snippet
         context = ""
 
+        clean_articles = []
+
         if relevant_articles:
+            for item in relevant_articles:
+                if isinstance(item, list):
+                    for subitem in item:
+                        if isinstance(subitem, dict):
+                            clean_articles.append(subitem)
+                elif isinstance(item, dict):
+                    clean_articles.append(item)
+
+        if clean_articles:
             context = "\n\n[RELEVANT NEWS CONTEXT FOUND IN KNOWLEDGE BASE]\n"
 
-            for idx, article in enumerate(relevant_articles, start=1):
-
-                if isinstance(article, list):
-                    if len(article) > 0:
-                        article = article[0]
-                    else:
-                        continue
-                if not isinstance(article, dict):
-                    continue
-
+            for idx, article in enumerate(clean_articles, start=1):
                 content = article.get("content") or article.get("text") or ""
 
                 context += f"""
@@ -132,7 +157,8 @@ Content: {content[:1500]}
         # so Mistral reads it as part of the instructions.
         if context:
             user_message_obj["content"] = f"""
-            {user_query}{context}
+            {user_query}
+{context}
             
             Instructions: Use the provided news context above to answer the query. 
             Ensure you reproduce the URLs exactly as provided. 
@@ -150,6 +176,8 @@ Content: {content[:1500]}
             headers={"Content-Type": "application/json"},
             timeout=30
         )
+
+        worker_response.raise_for_status()  # Raise an error if the worker returns a bad status
         
         # 6. Pass Mistral's final answer back to script.js
         return jsonify(worker_response.json())
