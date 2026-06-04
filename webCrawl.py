@@ -70,6 +70,71 @@ NEWS_FEEDS = {
        "source_type": "international media",
        "perspective_label": "non-Western global outlet",
    },
+
+    "CNBC Business": {
+    "main": "https://www.cnbc.com/id/10001147/device/rss/rss.html",
+    "country": "United States",
+    "language": "en",
+    "source_type": "business media",
+    "perspective_label": "US business/markets",
+},
+
+"BBC Business": {
+    "main": "https://feeds.bbci.co.uk/news/business/rss.xml",
+    "country": "United Kingdom",
+    "language": "en",
+    "source_type": "public broadcaster",
+    "perspective_label": "UK/global business",
+},
+
+"BBC Technology": {
+    "main": "https://feeds.bbci.co.uk/news/technology/rss.xml",
+    "country": "United Kingdom",
+    "language": "en",
+    "source_type": "public broadcaster",
+    "perspective_label": "UK/global technology",
+},
+
+"BBC Entertainment": {
+    "main": "https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml",
+    "country": "United Kingdom",
+    "language": "en",
+    "source_type": "public broadcaster",
+    "perspective_label": "UK/global entertainment",
+},
+
+"ESPN": {
+    "main": "https://www.espn.com/espn/rss/news",
+    "country": "United States",
+    "language": "en",
+    "source_type": "sports media",
+    "perspective_label": "US sports",
+},
+
+"Variety": {
+    "main": "https://variety.com/feed/",
+    "country": "United States",
+    "language": "en",
+    "source_type": "entertainment media",
+    "perspective_label": "US entertainment industry",
+},
+
+"NPR": {
+    "main": "https://feeds.npr.org/1001/rss.xml",
+    "country": "United States",
+    "language": "en",
+    "source_type": "public/nonprofit media",
+    "perspective_label": "US public radio",
+},
+
+"AP News": {
+    "main": "https://apnews.com/hub/ap-top-news?output=rss",
+    "country": "United States",
+    "language": "en",
+    "source_type": "wire service",
+    "perspective_label": "US/global wire service",
+},
+   
 }
 
 #switch from testing nbc to all the urls fed to it
@@ -149,7 +214,7 @@ def run_news_crawler():
         print(f"Found {len(article_links)} recent articles in feed.")
     
     # Limit processing for testing (e.g., process the top 10 fresh articles)
-        for link in article_links[:50]:
+        for link in article_links[:100]:
             print(f"Processing: {link}")
             if process_and_store_article(link, source_name, feeds):
                 success_count += 1

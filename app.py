@@ -103,6 +103,13 @@ def chat_bridge():
 
         if is_recent_request:
             relevant_articles = get_recent_articles(limit=5)
+            recent_request_instruction = """
+This is a general recent-news request.
+Give only 3-5 diverse stories.
+Do not overfocus on one region or topic.
+After summarizing, ask which topic the user wants next:
+world, US, technology, finance, sports, entertainment, health/science, or culture.
+"""
 
         else:
             # Step 1: search ChromaDB
@@ -167,6 +174,17 @@ Content: {content[:1500]}
             Stay neutral and avoid taking a political side.
             After answering ask 2-3 Socratic questions that won't take too long to think about but help user think critically.
             The questions should address missing perspectives, cultural context, evidence, or who benefits and loses.
+            For each article you mention, include:
+- Source name
+- Source country
+- Source type
+- Perspective/Bias note
+
+Do not call a source "unbiased." Instead say "perspective note" or "source context."
+
+If the user asks for recent/latest news generally, give only 3-5 diverse stories and ask what topic they want more of.
+Do not give too many stories about the same region or topic.
+Keep answers short at first, then offer to go deeper.
             """
 
         # 5. Forward the updated conversation history to your Cloudflare Worker
