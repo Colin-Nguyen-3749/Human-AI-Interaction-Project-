@@ -101,19 +101,40 @@ def chat_bridge():
             for keyword in recent_keywords
         )
 
+        recent_request_instruction = ""
+
         if is_recent_request:
             relevant_articles = get_recent_articles(limit=5)
+            
             recent_request_instruction = """
-This is a general recent-news request.
-Give only 3-5 diverse stories.
-Do not overfocus on one region or topic.
-After summarizing, ask which topic the user wants next:
-world, US, technology, finance, sports, entertainment, health/science, or culture.
-"""
+            This is a general recent-news request.
+            Give only 3-5 diverse stories.
+            Do not overfocus on one region or topic.
+            After summarizing, ask which topic the user wants next:
+            world, US, technology, finance, sports, entertainment, health/science, or culture.
+            """
 
         else:
             # Step 1: search ChromaDB
             relevant_articles = query_knowledge_base(user_query, limit=5)
+            
+            # Detect whether retrieved articles actually match the user's topic
+            query_words = user_query.lower().split()
+
+            matching_articles = []
+
+            for article in relevant_articles:
+                combined_text = (
+                    str(article.get("title", "")) + " " +
+                    str(article.get("content", "")) + " " +
+                    str(article.get("text", ""))
+                ).lower()
+
+                if any(word in combined_text for word in query_words):
+                    matching_articles.append(article)
+
+                # Replace with only relevant matches
+                relevant_articles = matching_articles
 
             # Step 2: search SQLite fallback
             if not relevant_articles:
@@ -151,41 +172,83 @@ world, US, technology, finance, sports, entertainment, health/science, or cultur
                 content = article.get("content") or article.get("text") or ""
 
                 context += f"""
-Article {idx}
-Title: {article.get("title", "Untitled")}
-Source: {article.get("source", "Unknown")}
-Country/Perspective: {article.get("country", "Unknown")} / {article.get("perspective_label", "unspecified")}
-Published: {article.get("publish_date", "Unknown")}
-URL: {article.get("url", "")}
-Content: {content[:1500]}
-"""
+                =============================
+                Article {idx}
+                =============================
+
+                Title: {article.get("title", "Untitled")}
+
+                Source: {article.get("source", "Unknown")}
+
+                Source Type: {article.get("source_type", "Unknown")}
+
+                Country/Perspective: {article.get("country", "Unknown")} / {article.get("perspective_label", "unspecified")}
+
+                Published: {article.get("publish_date", "Unknown")}
+
+                ARTICLE URL: 
+                [{article.get("source", "Source")}]
+                ({article.get("url", "")})
+
+                Content: {content[:1500]}
+
+                END ARTICLE {idx}
+
+                """
 
         # 4. Append the news context directly behind the user's prompt 
         # so Mistral reads it as part of the instructions.
         if context:
             user_message_obj["content"] = f"""
             {user_query}
-{context}
+            {context}
+            {recent_request_instruction}
             
             Instructions: Use the provided news context above to answer the query. 
             Ensure you reproduce the URLs exactly as provided. 
+
+            SOURCE LINK RULES:
+            - Every story MUST include a working markdown source link.
+            - Format links EXACTLY like:
+            [Source Name](FULL_URL)
+
+            - Never write source names without links.
+            - Never summarize a story unless a URL is available.
+            - Use the exact article URL provided in the context.
+            - Put the source link directly underneath its matching story.
+
             Do not shorten or truncate URLS. 
             Return links in markdown format
             Stay neutral and avoid taking a political side.
             After answering ask 2-3 Socratic questions that won't take too long to think about but help user think critically.
             The questions should address missing perspectives, cultural context, evidence, or who benefits and loses.
             For each article you mention, include:
-- Source name
-- Source country
-- Source type
-- Perspective/Bias note
+            - Source name
+            - Source country
+            - Source type
+            - Perspective/Bias note
 
-Do not call a source "unbiased." Instead say "perspective note" or "source context."
+            CRITICAL FACTUALITY RULES:
+            - ONLY use facts explicitly stated in the provided article context.
+            - NEVER invent people, election results, quotes, laws, statistics, or relationships.
+            - NEVER combine multiple articles into one story unless explicitly connected in the provided context.
+            - If information is uncertain or incomplete, say so.
+            - If there is not enough evidence for a claim, do not state it.
+            - Use the exact URLs provided with their matching article only.
+            - Never create placeholder citations or mention a source without its URL.
 
-If the user asks for recent/latest news generally, give only 3-5 diverse stories and ask what topic they want more of.
-Do not give too many stories about the same region or topic.
-Keep answers short at first, then offer to go deeper.
-            """
+            - Do not call a source "unbiased." Instead say "perspective note" or "source context."
+
+            - Do not infer additional political analysis unless clearly supported by the articles. 
+            - Avoid dramatic framing or speculative interpretations. 
+            - When discussing elections, laws, polling, or political figures: 
+                - verify names carefully 
+                - do not invent offices or election outcomes - do not invent polling numbers
+
+            - If the user asks for recent/latest news generally, give only 3-5 diverse stories and ask what topic they want more of.
+            Do not give too many stories about the same region or topic.
+            Keep answers short at first, then offer to go deeper.
+                        """
 
         # 5. Forward the updated conversation history to your Cloudflare Worker
         worker_response = requests.post(

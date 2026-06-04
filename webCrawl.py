@@ -23,238 +23,221 @@ NEWS_FEEDS = {
         "perspective_label": "US mainstream",
     },
 
-    "BBC": {
-        "main": "http://feeds.bbci.co.uk/news/rss.xml",
+    "NBC Politics": {
+        "main": "https://feeds.nbcnews.com/feeds/nbcpolitics",
+        "country": "United States",
+        "language": "en",
+        "source_type": "corporate media",
+        "perspective_label": "US mainstream politics",
+    },
+
+    "NBC Business": {
+        "main": "https://feeds.nbcnews.com/nbcnews/public/business",
+        "country": "United States",
+        "language": "en",
+        "source_type": "corporate media",
+        "perspective_label": "US business coverage",
+    },
+
+    "BBC World": {
+        "main": "https://feeds.bbci.co.uk/news/world/rss.xml",
         "country": "United Kingdom",
         "language": "en",
         "source_type": "public broadcaster",
         "perspective_label": "UK/global public broadcaster",
     },
 
-    "NBC Politics" :{
-        "main" : "https://feeds.nbcnews.com/feeds/nbcpolitics",
-        "country": "United States",
+    "BBC Business": {
+        "main": "https://feeds.bbci.co.uk/news/business/rss.xml",
+        "country": "United Kingdom",
         "language": "en",
-        "source_type": "corporate media",
-        "perspective_label": "US mainstream",
+        "source_type": "public broadcaster",
+        "perspective_label": "UK/global business",
     },
 
-    "NBC Business" : {
-        "main" : "https://feeds.nbcnews.com/nbcnews/public/business",
-        "country": "United States",
+    "BBC Technology": {
+        "main": "https://feeds.bbci.co.uk/news/technology/rss.xml",
+        "country": "United Kingdom",
         "language": "en",
-        "source_type": "corporate media",
-        "perspective_label": "US mainstream",
+        "source_type": "public broadcaster",
+        "perspective_label": "UK/global technology",
     },
 
-   "Conversation Feed" : {
-       "main" : "https://theconversation.com/us/articles.atom",
-       "country": "United States",
-       "language": "en",
-       "source_type": "academic commentary",
-       "perspective_label": "expert/academic analysis",
-   },
+    "BBC Science": {
+        "main": "https://feeds.bbci.co.uk/news/science_and_environment/rss.xml",
+        "country": "United Kingdom",
+        "language": "en",
+        "source_type": "public broadcaster",
+        "perspective_label": "UK/global science and environment",
+    },
 
-   "Alternet Feed" : {
-       "main" : "https://alternet.org/feeds/feed.rss",
-       "country": "United States",
-       "language": "en",
-       "source_type": "independent media",
-       "perspective_label": "US progressive",
-   },
+    "BBC Health": {
+        "main": "https://feeds.bbci.co.uk/news/health/rss.xml",
+        "country": "United Kingdom",
+        "language": "en",
+        "source_type": "public broadcaster",
+        "perspective_label": "UK/global health",
+    },
 
-   "Al Jazeera" : {
-       "main" : "https://www.aljazeera.com/xml/rss/all.xml",
-       "country": "Qatar",
-       "language": "en",
-       "source_type": "international media",
-       "perspective_label": "non-Western global outlet",
-   },
+    "BBC Entertainment": {
+        "main": "https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml",
+        "country": "United Kingdom",
+        "language": "en",
+        "source_type": "public broadcaster",
+        "perspective_label": "UK/global entertainment",
+    },
+
+    "BBC Sport": {
+        "main": "https://feeds.bbci.co.uk/sport/rss.xml",
+        "country": "United Kingdom",
+        "language": "en",
+        "source_type": "public broadcaster",
+        "perspective_label": "UK/global sports",
+    },
+
+    "The Conversation": {
+        "main": "https://theconversation.com/us/articles.atom",
+        "country": "United States",
+        "language": "en",
+        "source_type": "academic commentary",
+        "perspective_label": "expert/academic analysis",
+    },
+
+    "Al Jazeera": {
+        "main": "https://www.aljazeera.com/xml/rss/all.xml",
+        "country": "Qatar",
+        "language": "en",
+        "source_type": "international media",
+        "perspective_label": "non-Western global outlet",
+    },
 
     "CNBC Business": {
-    "main": "https://www.cnbc.com/id/10001147/device/rss/rss.html",
-    "country": "United States",
-    "language": "en",
-    "source_type": "business media",
-    "perspective_label": "US business/markets",
-},
+        "main": "https://www.cnbc.com/id/10001147/device/rss/rss.html",
+        "country": "United States",
+        "language": "en",
+        "source_type": "business media",
+        "perspective_label": "US business/markets",
+    },
 
-"BBC Business": {
-    "main": "https://feeds.bbci.co.uk/news/business/rss.xml",
-    "country": "United Kingdom",
-    "language": "en",
-    "source_type": "public broadcaster",
-    "perspective_label": "UK/global business",
-},
+    "ESPN Sports": {
+        "main": "https://www.espn.com/espn/rss/news",
+        "country": "United States",
+        "language": "en",
+        "source_type": "sports media",
+        "perspective_label": "US sports",
+    },
 
-"BBC Technology": {
-    "main": "https://feeds.bbci.co.uk/news/technology/rss.xml",
-    "country": "United Kingdom",
-    "language": "en",
-    "source_type": "public broadcaster",
-    "perspective_label": "UK/global technology",
-},
+    "Variety Entertainment": {
+        "main": "https://variety.com/feed/",
+        "country": "United States",
+        "language": "en",
+        "source_type": "entertainment media",
+        "perspective_label": "US entertainment industry",
+    },
 
-"BBC Entertainment": {
-    "main": "https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml",
-    "country": "United Kingdom",
-    "language": "en",
-    "source_type": "public broadcaster",
-    "perspective_label": "UK/global entertainment",
-},
+    "NPR Top News": {
+        "main": "https://feeds.npr.org/1001/rss.xml",
+        "country": "United States",
+        "language": "en",
+        "source_type": "public/nonprofit media",
+        "perspective_label": "US public radio",
+    },
 
-"ESPN": {
-    "main": "https://www.espn.com/espn/rss/news",
-    "country": "United States",
-    "language": "en",
-    "source_type": "sports media",
-    "perspective_label": "US sports",
-},
+    "PBS NewsHour": {
+        "main": "https://www.pbs.org/newshour/feeds/rss/headlines",
+        "country": "United States",
+        "language": "en",
+        "source_type": "public broadcaster",
+        "perspective_label": "US public broadcasting",
+    },
 
-"Variety": {
-    "main": "https://variety.com/feed/",
-    "country": "United States",
-    "language": "en",
-    "source_type": "entertainment media",
-    "perspective_label": "US entertainment industry",
-},
+    "DW News": {
+        "main": "https://rss.dw.com/xml/rss-en-all",
+        "country": "Germany",
+        "language": "en",
+        "source_type": "public broadcaster",
+        "perspective_label": "German/international public broadcaster",
+    },
 
-"NPR": {
-    "main": "https://feeds.npr.org/1001/rss.xml",
-    "country": "United States",
-    "language": "en",
-    "source_type": "public/nonprofit media",
-    "perspective_label": "US public radio",
-},
+    "France24": {
+        "main": "https://www.france24.com/en/rss",
+        "country": "France",
+        "language": "en",
+        "source_type": "public broadcaster",
+        "perspective_label": "French/global public broadcaster",
+    },
 
-"AP News": {
-    "main": "https://apnews.com/hub/ap-top-news?output=rss",
-    "country": "United States",
-    "language": "en",
-    "source_type": "wire service",
-    "perspective_label": "US/global wire service",
-},
+    "Channel News Asia": {
+        "main": "https://www.channelnewsasia.com/rssfeeds/8395986",
+        "country": "Singapore",
+        "language": "en",
+        "source_type": "regional broadcaster",
+        "perspective_label": "Southeast Asian perspective",
+    },
 
-"Associated Press": {
-    "main": "https://apnews.com/hub/ap-top-news?output=rss",
-    "country": "United States",
-    "language": "en",
-    "source_type": "wire service",
-    "perspective_label": "global wire service",
-},
+    "Japan Times": {
+        "main": "https://www.japantimes.co.jp/feed/",
+        "country": "Japan",
+        "language": "en",
+        "source_type": "newspaper",
+        "perspective_label": "Japanese English-language outlet",
+    },
 
-"Reuters World": {
-    "main": "https://feeds.reuters.com/reuters/worldNews",
-    "country": "United Kingdom",
-    "language": "en",
-    "source_type": "wire service",
-    "perspective_label": "international wire service",
-},
+    "Korea JoongAng Daily": {
+        "main": "https://koreajoongangdaily.joins.com/feeds/rss/home.xml",
+        "country": "South Korea",
+        "language": "en",
+        "source_type": "newspaper",
+        "perspective_label": "South Korean English-language outlet",
+    },
 
-"NPR": {
-    "main": "https://feeds.npr.org/1001/rss.xml",
-    "country": "United States",
-    "language": "en",
-    "source_type": "public/nonprofit media",
-    "perspective_label": "US public radio",
-},
+    "Yonhap English": {
+        "main": "https://en.yna.co.kr/RSS/news.xml",
+        "country": "South Korea",
+        "language": "en",
+        "source_type": "wire service",
+        "perspective_label": "South Korean national wire service",
+    },
 
-"PBS NewsHour": {
-    "main": "https://www.pbs.org/newshour/feeds/rss/headlines",
-    "country": "United States",
-    "language": "en",
-    "source_type": "public broadcaster",
-    "perspective_label": "US public broadcasting",
-},
+    "South China Morning Post": {
+        "main": "https://www.scmp.com/rss/91/feed",
+        "country": "Hong Kong",
+        "language": "en",
+        "source_type": "newspaper",
+        "perspective_label": "Hong Kong/China regional perspective",
+    },
 
-"DW News": {
-    "main": "https://rss.dw.com/xml/rss-en-all",
-    "country": "Germany",
-    "language": "en",
-    "source_type": "public broadcaster",
-    "perspective_label": "German/international perspective",
-},
+    "Africanews": {
+        "main": "https://www.africanews.com/feed/rss",
+        "country": "Pan-African",
+        "language": "en",
+        "source_type": "international media",
+        "perspective_label": "African regional perspective",
+    },
 
-"France24": {
-    "main": "https://www.france24.com/en/rss",
-    "country": "France",
-    "language": "en",
-    "source_type": "public broadcaster",
-    "perspective_label": "French/global perspective",
-},
+    "Rest of World": {
+        "main": "https://restofworld.org/feed/latest/",
+        "country": "Global",
+        "language": "en",
+        "source_type": "independent media",
+        "perspective_label": "global technology/culture outside the West",
+    },
 
-"Channel News Asia": {
-    "main": "https://www.channelnewsasia.com/rssfeeds/8395986",
-    "country": "Singapore",
-    "language": "en",
-    "source_type": "regional broadcaster",
-    "perspective_label": "Southeast Asian perspective",
-},
+    "The Verge": {
+        "main": "https://www.theverge.com/rss/index.xml",
+        "country": "United States",
+        "language": "en",
+        "source_type": "technology media",
+        "perspective_label": "technology/culture reporting",
+    },
 
-"Japan Times": {
-    "main": "https://www.japantimes.co.jp/feed/",
-    "country": "Japan",
-    "language": "en",
-    "source_type": "newspaper",
-    "perspective_label": "Japanese perspective",
-},
-
-"Korea Times": {
-    "main": "https://www.koreatimes.co.kr/rss",
-    "country": "South Korea",
-    "language": "en",
-    "source_type": "newspaper",
-    "perspective_label": "South Korean perspective",
-},
-
-"Korea JoongAng Daily": {
-    "main": "https://koreajoongangdaily.joins.com/rss",
-    "country": "South Korea",
-    "language": "en",
-    "source_type": "newspaper",
-    "perspective_label": "South Korean English-language outlet",
-},
-
-"South China Morning Post": {
-    "main": "https://www.scmp.com/rss/91/feed",
-    "country": "Hong Kong",
-    "language": "en",
-    "source_type": "newspaper",
-    "perspective_label": "Hong Kong/China regional perspective",
-},
-
-"Africa News": {
-    "main": "https://www.africanews.com/feed/rss",
-    "country": "Pan-African",
-    "language": "en",
-    "source_type": "international media",
-    "perspective_label": "African regional perspective",
-},
-
-"Rest of World": {
-    "main": "https://restofworld.org/feed/latest/",
-    "country": "Global",
-    "language": "en",
-    "source_type": "independent media",
-    "perspective_label": "global technology/culture outside West",
-},
-
-"The Verge": {
-    "main": "https://www.theverge.com/rss/index.xml",
-    "country": "United States",
-    "language": "en",
-    "source_type": "technology media",
-    "perspective_label": "technology/culture reporting",
-},
-
-"Ars Technica": {
-    "main": "https://feeds.arstechnica.com/arstechnica/index",
-    "country": "United States",
-    "language": "en",
-    "source_type": "technology journalism",
-    "perspective_label": "technical/science reporting",
-},
-   
+    "Ars Technica": {
+        "main": "https://feeds.arstechnica.com/arstechnica/index",
+        "country": "United States",
+        "language": "en",
+        "source_type": "technology journalism",
+        "perspective_label": "technical/science reporting",
+    },
 }
 
 #switch from testing nbc to all the urls fed to it
