@@ -21,14 +21,22 @@ def save_to_vector_db(article_data):
     """Inserts an article into the local vector database."""
     # Use the URL as a unique ID to prevent duplicates
     doc_id = article_data['url']
-    
+
+    article_text = article_data.get("content") or article_data.get("text")
+
     # Chroma handles upserts safely if you specify the ID
     collection.upsert(
-        documents=[article_data['text']], # The actual text that gets vectorized
+        documents=[article_text], # The actual text that gets vectorized
         metadatas=[{
-            "title": article_data['title'], 
-            "url": article_data['url'],
-            "publish_date": str(article_data['publish_date'])
+            "title": article_data.get("title", "Untitled"),
+            "url": article_data.get("url", ""),
+            "publish_date": str(article_data.get("publish_date", "Unknown")),
+            "source": article_data.get("source", "Unknown"),
+            "country": article_data.get("country", "Unknown"),
+            "language": article_data.get("language", "en"),
+            "source_type": article_data.get("source_type", "news"),
+            "perspective_label": article_data.get("perspective_label", "unspecified"),
+            "category": article_data.get("category", "news")
         }], # Metadata you want to pass to the chatbot along with the text
         ids=[doc_id]
     )
@@ -42,12 +50,27 @@ def query_knowledge_base(user_query, limit=3):
     
     # Reformatting the output into a clean, readable dictionary structure
     formatted_articles = []
-    if results['documents']:
-        for i in range(len(results['documents'][0])):
-            formatted_articles.append({
-                "text": results['documents'][0][i],
-                "title": results['metadatas'][0][i]['title'],
-                "url": results['metadatas'][0][i]['url']
-            })
-            
+
+    if not results or not results.get("documents"):
+        return formatted_articles
+
+    documents = results.get("documents", [0])
+    metadata = results.get("metadatas", [0])
+
+    for i in range(len(documents)):
+        metadata = metadata[i]
+
+        formatted_articles.append({
+            "text": documents[i],
+            "title": metadata.get("title", "Untitled"),
+            "url": metadata.get("url", ""),
+            "publish_date": metadata.get("publish_date", "Unknown"),
+            "source": metadata.get("source", "Unknown"),
+            "country": metadata.get("country", "Unknown"),
+            "language": metadata.get("language", "en"),
+            "source_type": metadata.get("source_type", "news"),
+            "perspective_label": metadata.get("perspective_label", "unspecified"),
+            "category": metadata.get("category", "news")
+        })
+
     return formatted_articles

@@ -11,8 +11,8 @@
 /* Cloudflare Worker with Web Search Integration */
 
 /* Environment variables you'll need to set in Cloudflare Workers:
- * - OPENAI_API_KEY: Your OpenAI API key
- * - TAVILY_API_KEY: Your Tavily Search API key (free tier available)
+ * - REROOT_API_KEY: Your OpenAI API key
+ * - NEWS_API_KEY: Your Tavily Search API key (free tier available)
  */
 export default {
   async fetch(request, env) {
@@ -54,7 +54,7 @@ export default {
         /* Fetch news articles */
         const searchResults = await performWebSearch(
           searchQuery,
-          env.OPENNEWS_API_KEY
+          env.NEWS_API_KEY
         );
 
         /* Add articles into prompt */
@@ -136,7 +136,7 @@ function extractSearchQuery(messages) {
     .replace(/[^\w\s]/g, ' ')
     .split(' ')
     .filter(word => word.length > 3)
-    .slice(0, 5)
+    .slice(0, 8)
     .join(' ');
 
   return `world politics OR global economy OR international conflict ${userTerms}`;
@@ -148,11 +148,13 @@ async function performWebSearch(query, OPENNEWS_API_KEY) {
   try {
 
     // const url = new URL('https://newsdata.io/api/1/latest');
-    const url = new URL('https://newsapi.org/v2/top-headlines');
+    const url = new URL('https://newsapi.org/v2/everything');
 
     url.searchParams.set('apiKey', OPENNEWS_API_KEY);
     url.searchParams.set('q', query);
     url.searchParams.set('language', 'en');
+    url.searchParams.set('sortBy', 'publishedAt');
+    url.searchParams.set('pageSize', '8');
     url.searchParams.set('from', getYesterdayDate());
 
     const response = await fetch(url.toString(), {
@@ -276,6 +278,14 @@ RULES:
 
 Never place all links on one line.
 
+- After answering, ask 203 thoughtful Socratic questions.
+- Questions should explore:
+  - Missing perspectives
+  - Cultural context
+  - Evidence
+  - Who benefits and loses
+- Do not force opinions or leading questions.
+
 IMPORTANT FORMAT RULES:
 - Use markdown bullet points
 - Put each source on its own line
@@ -319,10 +329,13 @@ async function callMistralAI(messages, REROOT_API_KEY) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${REROOT_API_KEY}`,
       },
+      cf:{
+        cacheTtl: 0
+      },
       body: JSON.stringify({
         model: 'mistral-small-latest',
         messages: messages,
-        max_tokens: 800,
+        max_tokens: 900,
         temperature: 0.5,
       }),
     }
@@ -366,7 +379,7 @@ export default {
       messages: userInput.messages,
       max_tokens: 800, //YOU CAN ADJUST TOKENS, TEMP, AND FREQ
       temperature: 0.5,
-      frequency_penalty: 0.8,
+      frequency_penalty: 0.4,
     };
 
     const response = await fetch(apiUrl, {

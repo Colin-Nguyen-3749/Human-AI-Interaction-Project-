@@ -1,8 +1,12 @@
 # crawler.py
+
+import time
+from typing import Dict, List
+
 import feedparser
 from newspaper import Article
-from vectordb import save_to_vector_db  # Connects to your ChromaDB file
 
+from vectordb import save_to_vector_db  # Connects to your ChromaDB file
 from database import (
     create_art_tables,
     save_article,
@@ -13,38 +17,63 @@ from database import (
 NEWS_FEEDS = {
     "NBC Main News": {
         "main": "https://feeds.nbcnews.com/nbcnews/public/news",
-    },
-
-    "Reuters": {
-        "main": "https://feeds.reuters.com/reuters/topNews"
+        "country": "United States",
+        "language": "en",
+        "source_type": "corporate media",
+        "perspective_label": "US mainstream",
     },
 
     "BBC": {
-        "main": "http://feeds.bbci.co.uk/news/rss.xml"
+        "main": "http://feeds.bbci.co.uk/news/rss.xml",
+        "country": "United Kingdom",
+        "language": "en",
+        "source_type": "public broadcaster",
+        "perspective_label": "UK/global public broadcaster",
     },
-    #forbes not working?
-    #"Forbes" : {
-       # "main": "https://www.forbes.com/business/feed/"
-   # },
 
     "NBC Politics" :{
-        "main" : "https://feeds.nbcnews.com/feeds/nbcpolitics"
+        "main" : "https://feeds.nbcnews.com/feeds/nbcpolitics",
+        "country": "United States",
+        "language": "en",
+        "source_type": "corporate media",
+        "perspective_label": "US mainstream",
     },
 
     "NBC Business" : {
-        "main" : "https://feeds.nbcnews.com/nbcnews/public/business"
+        "main" : "https://feeds.nbcnews.com/nbcnews/public/business",
+        "country": "United States",
+        "language": "en",
+        "source_type": "corporate media",
+        "perspective_label": "US mainstream",
     },
 
    "Conversation Feed" : {
-       "main" : "theconversation.com/us/articles"
+       "main" : "https://theconversation.com/us/articles.atom",
+       "country": "United States",
+       "language": "en",
+       "source_type": "academic commentary",
+       "perspective_label": "expert/academic analysis",
    },
 
    "Alternet Feed" : {
-       "main" : "alternet.org/feeds/feed.rss"
-   }
+       "main" : "https://alternet.org/feeds/feed.rss",
+       "country": "United States",
+       "language": "en",
+       "source_type": "independent media",
+       "perspective_label": "US progressive",
+   },
+
+   "Al Jazeera" : {
+       "main" : "https://www.aljazeera.com/xml/rss/all.xml",
+       "country": "Qatar",
+       "language": "en",
+       "source_type": "international media",
+       "perspective_label": "non-Western global outlet",
+   },
 }
+
 #switch from testing nbc to all the urls fed to it
-def fetch_nbc_article_urls(feed_url):
+def fetch_article_urls(feed_url) -> List[str]:
     """Parses to retrieve a clean list of article links."""
     print(f"Fetching RSS feed data from: {feed_url}")
     feed = feedparser.parse(feed_url)
@@ -52,12 +81,13 @@ def fetch_nbc_article_urls(feed_url):
     links = []
     for entry in feed.entries:
         # Check if a link exists in the feed entry
-        if hasattr(entry, 'link'):
-            links.append(entry.link)
+        link = getattr(entry, "link", None)
+        if link:
+            links.append(link)
             
-    return list(set(links))  # De-duplicate links just in case
+    return list(dict.fromkeys(links))  # De-duplicate links just in case
 
-def process_and_store_article(url, source_name):
+def process_and_store_article(url, source_name, source_meta):
     """Downloads article body from NBC, update vector database"""
 
     if article_exists(url):
@@ -73,26 +103,28 @@ def process_and_store_article(url, source_name):
         if not article.text or len(article.text.strip()) < 100:
             return False
             
+        publish_date = article.publish_date if article.publish_date else "Unknown"
+        summary = article.text[:500]  # Simple summary: first 500 chars
+        
         article_data = {
-            "title": article.title,
-            "text": article.text,
-            "publish_date": article.publish_date if article.publish_date else "Unknown",
-            "url": url
-        }
-        save_article({
-            "title": article.title,
+            "title": article.title or "Untitled",
             "url": url,
-            "publish_date": str(article.publish_date),
+            "publish_date": str(publish_date),
             "source": source_name,
             "content": article.text,
-            "summary": article.text[:300],
-            "category": "news"
-        })
+            "text": article.text,
+            "summary": summary,
+            "category": "news",
+            "country": source_meta.get("country", "Unknown"),
+            "language": source_meta.get("language", "en"),
+            "source_type": source_meta.get("source_type", "news"),
+            "perspective_label": source_meta.get("perspective_label", "unspecified"),
+        }
+        sql_saved = save_article(article_data)
+        vector_saved = save_to_vector_db(article_data)
 
-        # Save to local ChromaDB database
-        save_to_vector_db(article_data)
-        return True
-        
+        return sql_saved and vector_saved
+
     except Exception as e:
         print(f"Error extracting content from {url}: {e}")
         return False
@@ -102,9 +134,9 @@ def process_and_store_article(url, source_name):
 
 #issue: limit of article already exists??
 
-def run_nbc_crawler():
-    print("=== STARTING NBC NEWS CRAWLER ===")
-    
+def run_news_crawler():
+    print("=== STARTING NEWS CRAWLER ===")
+
     create_art_tables()
 
     success_count = 0
@@ -113,16 +145,17 @@ def run_nbc_crawler():
     for source_name, feeds in NEWS_FEEDS.items():
         target_feed = feeds["main"]
         print(f"\n=== FETCHING FROM {source_name} ===")
-        article_links = fetch_nbc_article_urls(target_feed)
+        article_links = fetch_article_urls(target_feed)
         print(f"Found {len(article_links)} recent articles in feed.")
     
     # Limit processing for testing (e.g., process the top 10 fresh articles)
-        for link in article_links:
+        for link in article_links[:50]:
             print(f"Processing: {link}")
-            if process_and_store_article(link, source_name):
+            if process_and_store_article(link, source_name, feeds):
                 success_count += 1
+            time.sleep(1)
             
     print(f"=== CRAWLER COMPLETE: Successfully saved {success_count} articles to ChromaDB ===")
 
 if __name__ == "__main__":
-    run_nbc_crawler() 
+    run_news_crawler()
